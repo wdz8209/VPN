@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    # Runs every day at 1:00 AM UTC
+    # 每天 1:00 AM UTC 执行一次
     - cron: "0 1 * * *"
 
 permissions:
@@ -34,15 +34,11 @@ jobs:
         run: |
           javascript-obfuscator origin.js --output _worker.js \
             --compact true \
-            --control-flow-flattening true \
-            --control-flow-flattening-threshold 1 \
-            --dead-code-injection true \
-            --dead-code-injection-threshold 1 \
-            --identifier-names-generator hexadecimal \
+            --control-flow-flattening false \
+            --dead-code-injection false \
+            --identifier-names-generator mangled \
             --rename-globals true \
-            --string-array true \
-            --string-array-encoding rc4 \
-            --string-array-threshold 1 \
+            --string-array false \
             --transform-object-keys true \
             --unicode-escape-sequence true
 
@@ -51,4 +47,3 @@ jobs:
         with:
           commit_message: ":arrow_up: Update latest BPB panel"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-
