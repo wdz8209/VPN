@@ -5,8 +5,8 @@ on:
     branches:
       - main
   schedule:
-        # Runs everyday at 1:00 AM
-        - cron: "0 1 * * *"
+    # Runs every day at 1:00 AM UTC
+    - cron: "0 1 * * *"
 
 permissions:
   contents: write
@@ -26,14 +26,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g javascript-obfuscator
+          npm install -g javascript-obfuscator || exit 1
 
       - name: Clone BPB workjs
         run: |
-          wget -O origin.js https://raw.githubusercontent.com/bia-pain-bache/BPB-Worker-Panel/refs/heads/main/build/unobfuscated-worker.js
+          wget -O origin.js https://raw.githubusercontent.com/bia-pain-bache/BPB-Worker-Panel/main/build/unobfuscated-worker.js
 
       - name: Obfuscate BPB worker js
         run: |
+          set -e
           javascript-obfuscator origin.js --output _worker.js \
           --compact true \
           --control-flow-flattening true \
@@ -51,7 +52,6 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: main
           commit_message: ':arrow_up: update latest bpb panel'
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
-          push_options: '--set-upstream'
+
